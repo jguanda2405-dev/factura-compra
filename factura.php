@@ -4,12 +4,10 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     exit();
 }
 
-// Constantes
-const IVA = 0.12;                // 12%
-const LIMITE_DESCUENTO = 150;    // $150
-const PORC_DESCUENTO = 0.15;     // 15%
+const IVA = 0.12;
+const LIMITE_DESCUENTO = 150;
+const PORC_DESCUENTO = 0.15;
 
-// Captura y validación
 $descripcion = htmlspecialchars(trim($_POST['descripcion'] ?? ''));
 $cantidad    = intval($_POST['cantidad'] ?? 0);
 $precio      = floatval($_POST['precio'] ?? 0);
@@ -19,17 +17,14 @@ if ($descripcion === '' || $cantidad <= 0 || $precio <= 0) {
     exit();
 }
 
-// Cálculos
-$subtotal        = $cantidad * $precio;       // Precio bruto
-$montoIva        = $subtotal * IVA;           // IVA
-$totalConIva     = $subtotal + $montoIva;     // Precio total de venta
+$subtotal        = $cantidad * $precio;
+$montoIva        = $subtotal * IVA;
+$totalConIva     = $subtotal + $montoIva;
 
-// Descuento condicional
 $aplicaDescuento = $totalConIva > LIMITE_DESCUENTO;
 $montoDescuento  = $aplicaDescuento ? $totalConIva * PORC_DESCUENTO : 0;
 $totalNeto       = $totalConIva - $montoDescuento;
 
-// Formato
 function fmt($n) {
     return '$ ' . number_format($n, 2, '.', ',');
 }
